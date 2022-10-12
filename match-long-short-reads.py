@@ -14,10 +14,10 @@ def parse_short_reads(short_read_fastq_paths):
         sample_id = fastq_filename.split('_')[0]
         r1_r2 = fastq_filename.split('_')[1].split('.')[0]
         if sample_id in short_reads_by_sample_id:
-            short_reads_by_sample_id[sample_id][r1_r2] = short_read_fastq_path
+            short_reads_by_sample_id[sample_id][r1_r2] = os.path.abspath(short_read_fastq_path)
         else:
             short_reads_by_sample_id[sample_id] = {"ID": sample_id}
-            short_reads_by_sample_id[sample_id][r1_r2] = short_read_fastq_path
+            short_reads_by_sample_id[sample_id][r1_r2] = os.path.abspath(short_read_fastq_path)
 
     return short_reads_by_sample_id
 
@@ -28,10 +28,12 @@ def parse_long_reads(long_read_fastq_paths):
         fastq_filename = os.path.basename(long_read_fastq_path)
         sample_id = fastq_filename.split('_')[0]
         if sample_id in long_reads_by_sample_id:
-            long_reads_by_sample_id[sample_id]['LONG'] = long_read_fastq_path
+            # this branch shouldn't actually be used, unless a sample is sequenced on more than
+            # one long-read run. In that case, we need some way of choosing which fastq to use (most recent?)
+            long_reads_by_sample_id[sample_id]['LONG'] = os.path.abspath(long_read_fastq_path)
         else:
             long_reads_by_sample_id[sample_id] = {"ID": sample_id}
-            long_reads_by_sample_id[sample_id]['LONG'] = long_read_fastq_path
+            long_reads_by_sample_id[sample_id]['LONG'] = os.path.abspath(long_read_fastq_path)
 
     return long_reads_by_sample_id
     
